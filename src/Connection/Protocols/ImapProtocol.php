@@ -461,16 +461,15 @@ class ImapProtocol extends Protocol {
                 $tokens = "";
                 $is_plus = $this->readLine($response, $tokens, '+', true);
                 if ($is_plus) {
-                    // try to log the challenge somewhere where it can be found
-                    error_log("got an extra server challenge: $tokens");
                     // respond with an empty response.
                     $response->stack($this->sendRequest(''));
                 } else {
                     if (preg_match('/^NO /i', $tokens) ||
                         preg_match('/^BAD /i', $tokens)) {
-                        error_log("got failure response: $tokens");
-                        return $response->addError("got failure response: $tokens");
-                    } else if (preg_match("/^OK /i", $tokens)) {
+                        $response->addError("got failure response: $tokens");
+                        throw new AuthFailedException("got failure response: $tokens", 0);
+                    }
+                    if (preg_match("/^OK /i", $tokens)) {
                         return $response->setResult(is_array($tokens) ? $tokens : [$tokens]);
                     }
                 }
