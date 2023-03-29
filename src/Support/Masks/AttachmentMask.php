@@ -22,7 +22,7 @@ use Webklex\PHPIMAP\Attachment;
 class AttachmentMask extends Mask {
 
     /** @var Attachment $parent */
-    protected mixed $parent;
+    protected  $parent;
 
     /**
      * Get the attachment content base64 encoded

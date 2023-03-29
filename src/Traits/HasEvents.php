@@ -36,7 +36,7 @@ trait HasEvents {
      * @param string $event
      * @param mixed $class
      */
-    public function setEvent(string $section, string $event, mixed $class): void {
+    public function setEvent(string $section, string $event,  $class): void {
         if (isset($this->events[$section])) {
             $this->events[$section][$event] = $class;
         }
@@ -58,7 +58,7 @@ trait HasEvents {
      * @return Event|string
      * @throws EventNotFoundException
      */
-    public function getEvent(string $section, string $event): Event|string {
+    public function getEvent(string $section, string $event) {
         if (isset($this->events[$section])) {
             return $this->events[$section][$event];
         }

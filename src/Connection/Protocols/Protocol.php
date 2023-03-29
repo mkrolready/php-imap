@@ -241,7 +241,7 @@ abstract class Protocol implements ProtocolInterface {
      *
      * @return string
      */
-    public function getUIDKey(int|string $uid): string {
+    public function getUIDKey(  $uid): string {
         if ($uid == IMAP::ST_UID || $uid == IMAP::FT_UID) {
             return "UID";
         }
@@ -259,7 +259,7 @@ abstract class Protocol implements ProtocolInterface {
      *
      * @return string
      */
-    public function buildUIDCommand(string $command, int|string $uid): string {
+    public function buildUIDCommand(string $command,   $uid): string {
         return trim($this->getUIDKey($uid)." ".$command);
     }
 
@@ -360,7 +360,7 @@ abstract class Protocol implements ProtocolInterface {
      *
      * @return mixed
      */
-    public function getStream(): mixed {
+    public function getStream() {
         return $this->stream;
     }
 }

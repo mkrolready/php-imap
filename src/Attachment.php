@@ -107,7 +107,7 @@ class Attachment {
         $this->part_number = $part->part_number;
 
         if ($this->oMessage->getClient()) {
-            $default_mask = $this->oMessage->getClient()?->getDefaultAttachmentMask();
+            $default_mask = $this->oMessage->getClient()->getDefaultAttachmentMask();
             if($default_mask != null) {
                 $this->mask = $default_mask;
             }
@@ -181,17 +181,35 @@ class Attachment {
      * Determine the structure type
      */
     protected function findType(): void {
-        $this->type = match ($this->part->type) {
-            IMAP::ATTACHMENT_TYPE_MESSAGE => 'message',
-            IMAP::ATTACHMENT_TYPE_APPLICATION => 'application',
-            IMAP::ATTACHMENT_TYPE_AUDIO => 'audio',
-            IMAP::ATTACHMENT_TYPE_IMAGE => 'image',
-            IMAP::ATTACHMENT_TYPE_VIDEO => 'video',
-            IMAP::ATTACHMENT_TYPE_MODEL => 'model',
-            IMAP::ATTACHMENT_TYPE_TEXT => 'text',
-            IMAP::ATTACHMENT_TYPE_MULTIPART => 'multipart',
-            default => 'other',
-        };
+        switch ($this->part->type) {
+            case IMAP::ATTACHMENT_TYPE_MESSAGE:
+                $this->type = 'message';
+                break;
+            case IMAP::ATTACHMENT_TYPE_APPLICATION:
+                $this->type = 'application';
+                break;
+            case IMAP::ATTACHMENT_TYPE_AUDIO:
+                $this->type = 'audio';
+                break;
+            case IMAP::ATTACHMENT_TYPE_IMAGE:
+                $this->type = 'image';
+                break;
+            case IMAP::ATTACHMENT_TYPE_VIDEO:
+                $this->type = 'video';
+                break;
+            case IMAP::ATTACHMENT_TYPE_MODEL:
+                $this->type = 'model';
+                break;
+            case IMAP::ATTACHMENT_TYPE_TEXT:
+                $this->type = 'text';
+                break;
+            case IMAP::ATTACHMENT_TYPE_MULTIPART:
+                $this->type = 'multipart';
+                break;
+            default:
+                $this->type = 'other';
+                break;
+        }
     }
 
     /**
@@ -369,7 +387,7 @@ class Attachment {
      * @return mixed
      * @throws MaskNotFoundException
      */
-    public function mask(string $mask = null): mixed {
+    public function mask(string $mask = null) {
         $mask = $mask !== null ? $mask : $this->mask;
         if(class_exists($mask)){
             return new $mask($this);

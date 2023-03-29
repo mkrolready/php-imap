@@ -233,7 +233,7 @@ class Folder {
      *
      * @return string|array|bool|string[]|null
      */
-    protected function decodeName($name): string|array|bool|null {
+    protected function decodeName($name) {
         $parts = [];
         foreach (explode($this->delimiter, $name) as $item) {
             $parts[] = EncodingAliases::convert($item, "UTF7-IMAP", "UTF-8");
@@ -249,7 +249,7 @@ class Folder {
      *
      * @return string|bool
      */
-    protected function getSimpleName($delimiter, $full_name): string|bool {
+    protected function getSimpleName($delimiter, $full_name) {
         $arr = explode($delimiter, $full_name);
         return end($arr);
     }
@@ -329,7 +329,7 @@ class Folder {
      * @throws AuthFailedException
      * @throws ResponseException
      */
-    public function appendMessage(string $message, array $options = null, Carbon|string $internal_date = null): array {
+    public function appendMessage(string $message, array $options = null, $internal_date = null): array {
         /**
          * Check if $internal_date is parsed. If it is null it should not be set. Otherwise, the message can't be stored.
          * If this parameter is set, it will set the INTERNALDATE on the appended message. The parameter should be a

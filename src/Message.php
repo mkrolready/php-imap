@@ -449,7 +449,7 @@ class Message {
      * @throws ResponseException
      * @throws MessageSizeFetchingException
      */
-    public function get($name): mixed {
+    public function get($name) {
         if (isset($this->attributes[$name]) && $this->attributes[$name] !== null) {
             return $this->attributes[$name];
         }
@@ -702,7 +702,7 @@ class Message {
      * @throws ResponseException
      */
     private function fetchStructure(Structure $structure): void {
-        $this->client?->openFolder($this->folder_path);
+        $this->client->openFolder($this->folder_path);
 
         foreach ($structure->parts as $part) {
             $this->fetchPart($part);
@@ -878,7 +878,7 @@ class Message {
      *
      * @return mixed|string
      */
-    public function convertEncoding($str, string $from = "ISO-8859-2", string $to = "UTF-8"): mixed {
+    public function convertEncoding($str, string $from = "ISO-8859-2", string $to = "UTF-8") {
 
         $from = EncodingAliases::get($from);
         $to = EncodingAliases::get($to);
@@ -918,7 +918,7 @@ class Message {
      *
      * @return string
      */
-    public function getEncoding(object|string $structure): string {
+    public function getEncoding($structure): string {
         if (property_exists($structure, 'parameters')) {
             foreach ($structure->parameters as $parameter) {
                 if (strtolower($parameter->attribute) == "charset") {
@@ -1238,7 +1238,7 @@ class Message {
      * @throws RuntimeException
      * @throws ResponseException
      */
-    public function setFlag(array|string $flag): bool {
+    public function setFlag($flag): bool {
         $this->client->openFolder($this->folder_path);
         $flag = "\\" . trim(is_array($flag) ? implode(" \\", $flag) : $flag);
         $sequence_id = $this->getSequenceId();
@@ -1269,7 +1269,7 @@ class Message {
      * @throws RuntimeException
      * @throws ResponseException
      */
-    public function unsetFlag(array|string $flag): bool {
+    public function unsetFlag($flag): bool {
         $this->client->openFolder($this->folder_path);
 
         $flag = "\\" . trim(is_array($flag) ? implode(" \\", $flag) : $flag);
@@ -1301,7 +1301,7 @@ class Message {
      * @throws RuntimeException
      * @throws ResponseException
      */
-    public function addFlag(array|string $flag): bool {
+    public function addFlag($flag): bool {
         return $this->setFlag($flag);
     }
 
@@ -1319,7 +1319,7 @@ class Message {
      * @throws RuntimeException
      * @throws ResponseException
      */
-    public function removeFlag(array|string $flag): bool {
+    public function removeFlag($flag): bool {
         return $this->unsetFlag($flag);
     }
 
@@ -1511,7 +1511,7 @@ class Message {
      * @return mixed
      * @throws MaskNotFoundException
      */
-    public function mask(mixed $mask = null): mixed {
+    public function mask( $mask = null) {
         $mask = $mask !== null ? $mask : $this->mask;
         if (class_exists($mask)) {
             return new $mask($this);
@@ -1621,7 +1621,7 @@ class Message {
      */
     public function setClient($client): Message {
         $this->client = $client;
-        $this->client?->openFolder($this->folder_path);
+        $this->client->openFolder($this->folder_path);
 
         return $this;
     }
@@ -1693,7 +1693,7 @@ class Message {
      *
      * @return bool|int
      */
-    public function save($filename): bool|int {
+    public function save($filename) {
         return file_put_contents($filename, $this->header->raw."\r\n\r\n".$this->structure->raw);
     }
 }

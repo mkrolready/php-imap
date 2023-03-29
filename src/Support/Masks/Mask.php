@@ -34,7 +34,7 @@ class Mask {
      *
      * @var mixed $parent
      */
-    protected mixed $parent;
+    protected  $parent;
 
     /**
      * Mask constructor.
@@ -121,7 +121,7 @@ class Mask {
      *
      * @return mixed
      */
-    public function getParent(): mixed {
+    public function getParent() {
         return $this->parent;
     }
 

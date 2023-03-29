@@ -127,7 +127,7 @@ interface ProtocolInterface {
      * @return Response
      * @throws RuntimeException
      */
-    public function content(int|array $uids, string $rfc = "RFC822", int|string $uid = IMAP::ST_UID): Response;
+    public function content(  $uids, string $rfc = "RFC822",   $uid = IMAP::ST_UID): Response;
 
     /**
      * Fetch message headers
@@ -139,7 +139,7 @@ interface ProtocolInterface {
      * @return Response
      * @throws RuntimeException
      */
-    public function headers(int|array $uids, string $rfc = "RFC822", int|string $uid = IMAP::ST_UID): Response;
+    public function headers(  $uids, string $rfc = "RFC822",   $uid = IMAP::ST_UID): Response;
 
     /**
      * Fetch message flags
@@ -150,7 +150,7 @@ interface ProtocolInterface {
      * @return Response
      * @throws RuntimeException
      */
-    public function flags(int|array $uids, int|string $uid = IMAP::ST_UID): Response;
+    public function flags(  $uids,   $uid = IMAP::ST_UID): Response;
     
     /**
      * Fetch message sizes
@@ -161,7 +161,7 @@ interface ProtocolInterface {
      * @return Response
      * @throws RuntimeException
      */
-    public function sizes(int|array $uids, int|string $uid = IMAP::ST_UID): Response;
+    public function sizes(  $uids,   $uid = IMAP::ST_UID): Response;
 
     /**
      * Get uid for a given id
@@ -206,7 +206,7 @@ interface ProtocolInterface {
      * @return Response containing the new flags if $silent is false, else true or false depending on success
      * @throws RuntimeException
      */
-    public function store(array|string $flags, int $from, ?int $to = null, ?string $mode = null, bool $silent = true, int|string $uid = IMAP::ST_UID, ?string $item = null): Response;
+    public function store( $flags, int $from, ?int $to = null, ?string $mode = null, bool $silent = true,   $uid = IMAP::ST_UID, ?string $item = null): Response;
 
     /**
      * Append a new message to given folder
@@ -233,7 +233,7 @@ interface ProtocolInterface {
      * @return Response
      * @throws RuntimeException
      */
-    public function copyMessage(string $folder, $from, ?int $to = null, int|string $uid = IMAP::ST_UID): Response;
+    public function copyMessage(string $folder, $from, ?int $to = null,   $uid = IMAP::ST_UID): Response;
 
     /**
      * Copy multiple messages to the target folder
@@ -245,7 +245,7 @@ interface ProtocolInterface {
      * @return Response Tokens if operation successful, false if an error occurred
      * @throws RuntimeException
      */
-    public function copyManyMessages(array $messages, string $folder, int|string $uid = IMAP::ST_UID): Response;
+    public function copyManyMessages(array $messages, string $folder,   $uid = IMAP::ST_UID): Response;
 
     /**
      * Move a message set from current folder to another folder
@@ -258,7 +258,7 @@ interface ProtocolInterface {
      *
      * @return Response
      */
-    public function moveMessage(string $folder, $from, ?int $to = null, int|string $uid = IMAP::ST_UID): Response;
+    public function moveMessage(string $folder, $from, ?int $to = null,   $uid = IMAP::ST_UID): Response;
 
     /**
      * Move multiple messages to the target folder
@@ -271,7 +271,7 @@ interface ProtocolInterface {
      * @return Response Tokens if operation successful, false if an error occurred
      * @throws RuntimeException
      */
-    public function moveManyMessages(array $messages, string $folder, int|string $uid = IMAP::ST_UID): Response;
+    public function moveManyMessages(array $messages, string $folder,   $uid = IMAP::ST_UID): Response;
 
     /**
      * Exchange identification information
@@ -403,7 +403,7 @@ interface ProtocolInterface {
      * @return Response containing the message ids
      * @throws RuntimeException
      */
-    public function search(array $params, int|string $uid = IMAP::ST_UID): Response;
+    public function search(array $params,   $uid = IMAP::ST_UID): Response;
 
     /**
      * Get a message overview
@@ -416,7 +416,7 @@ interface ProtocolInterface {
      * @throws MessageNotFoundException
      * @throws InvalidMessageDateException
      */
-    public function overview(string $sequence, int|string $uid = IMAP::ST_UID): Response;
+    public function overview(string $sequence,   $uid = IMAP::ST_UID): Response;
 
     /**
      * Enable the debug mode

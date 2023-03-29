@@ -490,7 +490,7 @@ class EncodingAliases {
      *
      * @return mixed
      */
-    public static function convert($str, string $from = "ISO-8859-2", string $to = "UTF-8"): mixed {
+    public static function convert($str, string $from = "ISO-8859-2", string $to = "UTF-8") {
         $from = self::get($from, self::detectEncoding($str));
         $to = self::get($to, self::detectEncoding($str));
 

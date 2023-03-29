@@ -37,7 +37,7 @@ class ClientManager {
      * ClientManager constructor.
      * @param array|string $config
      */
-    public function __construct(array|string $config = []) {
+    public function __construct($config = []) {
         $this->setConfig($config);
     }
 
@@ -73,7 +73,7 @@ class ClientManager {
      *
      * @return mixed|null
      */
-    public static function get(string $key, $default = null): mixed {
+    public static function get(string $key, $default = null) {
         $parts = explode('.', $key);
         $value = null;
         foreach ($parts as $part) {
@@ -190,7 +190,7 @@ class ClientManager {
      *
      * @return $this
      */
-    public function setConfig(array|string $config): ClientManager {
+    public function setConfig($config): ClientManager {
 
         if (is_array($config) === false) {
             $config = require $config;
@@ -240,7 +240,7 @@ class ClientManager {
      * @link   http://www.php.net/manual/en/function.array-merge-recursive.php#96201
      * @author Mark Roduner <mark.roduner@gmail.com>
      */
-    private function array_merge_recursive_distinct(): mixed {
+    private function array_merge_recursive_distinct() {
 
         $arrays = func_get_args();
         $base = array_shift($arrays);

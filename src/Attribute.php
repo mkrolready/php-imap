@@ -37,7 +37,7 @@ class Attribute implements ArrayAccess {
      * @param string $name
      * @param mixed|null $value
      */
-    public function __construct(string $name, mixed $value = null) {
+    public function __construct(string $name,  $value = null) {
         $this->setName($name);
         $this->add($value);
     }
@@ -47,7 +47,7 @@ class Attribute implements ArrayAccess {
      *
      * @return array|string
      */
-    public function __invoke(): array|string {
+    public function __invoke() {
         if ($this->count() > 1) {
             return $this->toArray();
         }
@@ -108,7 +108,7 @@ class Attribute implements ArrayAccess {
      * @param int|string $key
      * @return bool
      */
-    public function has(mixed $key = 0): bool {
+    public function has( $key = 0): bool {
         return array_key_exists($key, $this->values);
     }
 
@@ -118,7 +118,7 @@ class Attribute implements ArrayAccess {
      * @param int|string $key
      * @return bool
      */
-    public function exist(mixed $key = 0): bool {
+    public function exist( $key = 0): bool {
         return $this->has($key);
     }
 
@@ -128,7 +128,7 @@ class Attribute implements ArrayAccess {
      *
      * @return bool
      */
-    public function contains(mixed $value): bool {
+    public function contains( $value): bool {
         return in_array($value, $this->values, true);
     }
 
@@ -138,7 +138,7 @@ class Attribute implements ArrayAccess {
      * @param int|string $key
      * @return mixed
      */
-    public function get(int|string $key = 0): mixed {
+    public function get($key = 0) {
         return $this->values[$key] ?? null;
     }
 
@@ -149,7 +149,7 @@ class Attribute implements ArrayAccess {
      * @param mixed $value
      * @return Attribute
      */
-    public function set(mixed $value, mixed $key = 0): Attribute {
+    public function set( $value,  $key = 0): Attribute {
         if (is_null($key)) {
             $this->values[] = $value;
         } else {
@@ -164,7 +164,7 @@ class Attribute implements ArrayAccess {
      * @param int|string $key
      * @return Attribute
      */
-    public function remove(int|string $key = 0): Attribute {
+    public function remove($key = 0): Attribute {
         if (isset($this->values[$key])) {
             unset($this->values[$key]);
         }
@@ -178,7 +178,7 @@ class Attribute implements ArrayAccess {
      *
      * @return Attribute
      */
-    public function add(mixed $value, bool $strict = false): Attribute {
+    public function add( $value, bool $strict = false): Attribute {
         if (is_array($value)) {
             return $this->merge($value, $strict);
         }elseif ($value !== null) {
@@ -256,7 +256,7 @@ class Attribute implements ArrayAccess {
      *
      * @return mixed|null
      */
-    public function first(): mixed {
+    public function first() {
         return reset($this->values);
     }
 
@@ -265,7 +265,7 @@ class Attribute implements ArrayAccess {
      *
      * @return mixed|null
      */
-    public function last(): mixed {
+    public function last() {
         return end($this->values);
     }
 
@@ -283,7 +283,7 @@ class Attribute implements ArrayAccess {
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists(mixed $offset): bool {
+    public function offsetExists( $offset): bool {
         return $this->has($offset);
     }
 
@@ -292,7 +292,7 @@ class Attribute implements ArrayAccess {
      * @param mixed $offset
      * @return mixed
      */
-    public function offsetGet(mixed $offset): mixed {
+    public function offsetGet( $offset) {
         return $this->get($offset);
     }
 
@@ -302,7 +302,7 @@ class Attribute implements ArrayAccess {
      * @param mixed $value
      * @return void
      */
-    public function offsetSet(mixed $offset, mixed $value): void {
+    public function offsetSet( $offset,  $value): void {
         $this->set($value, $offset);
     }
 
@@ -311,7 +311,7 @@ class Attribute implements ArrayAccess {
      * @param mixed $offset
      * @return void
      */
-    public function offsetUnset(mixed $offset): void {
+    public function offsetUnset( $offset): void {
         $this->remove($offset);
     }
 

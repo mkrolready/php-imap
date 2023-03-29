@@ -385,7 +385,7 @@ class Client {
                 $this->connect();
                 return true;
             }
-        } catch (\Throwable) {
+        } catch (\Throwable $exception) {
             $this->connect();
         }
         return false;
@@ -448,7 +448,9 @@ class Client {
 
         try {
             $this->connection->connect($this->host, $this->port);
-        } catch (ErrorException|RuntimeException $e) {
+        } catch (RuntimeException $e) {
+            throw new ConnectionFailedException("connection setup failed", 0, $e);
+        } catch (ErrorException $e) {
             throw new ConnectionFailedException("connection setup failed", 0, $e);
         }
         $this->authenticate();

@@ -44,7 +44,7 @@ class ImapProtocol extends Protocol {
      * @param bool $cert_validation set to false to skip SSL certificate validation
      * @param mixed $encryption Connection encryption method
      */
-    public function __construct(bool $cert_validation = true, mixed $encryption = false) {
+    public function __construct(bool $cert_validation = true,  $encryption = false) {
         $this->setCertValidation($cert_validation);
         $this->encryption = $encryption;
     }
@@ -262,7 +262,7 @@ class ImapProtocol extends Protocol {
      * @return bool
      * @throws RuntimeException
      */
-    public function readLine(Response $response, array|string &$tokens = [], string $wantedTag = '*', bool $dontParse = false): bool {
+    public function readLine(Response $response, &$tokens = [], string $wantedTag = '*', bool $dontParse = false): bool {
         $line = $this->nextTaggedLine($response, $tag); // get next tag
         if (!$dontParse) {
             $tokens = $this->decodeLine($response, $line);
@@ -389,7 +389,7 @@ class ImapProtocol extends Protocol {
      * @return string|array escape literals, literals with newline ar returned
      *                      as array('{size}', 'string');
      */
-    public function escapeString(array|string $string): array|string {
+    public function escapeString($string) {
         if (func_num_args() < 2) {
             if (str_contains($string, "\n")) {
                 return ['{' . strlen($string) . '}', $string];
@@ -498,7 +498,7 @@ class ImapProtocol extends Protocol {
         try {
             $result = $this->requestAndResponse('LOGOUT', [], true);
             fclose($this->stream);
-        } catch (\Throwable) {}
+        } catch (\Throwable $e) {}
 
         $this->reset();
 
@@ -621,7 +621,7 @@ class ImapProtocol extends Protocol {
      *                      if items of messages are fetched it's returned as (msgno => (name => value))
      * @throws RuntimeException
      */
-    public function fetch(array|string $items, array|int $from, mixed $to = null, int|string $uid = IMAP::ST_UID): Response {
+    public function fetch( $items,   $from,  $to = null,   $uid = IMAP::ST_UID): Response {
         if (is_array($from)) {
             $set = implode(',', $from);
         } elseif ($to === null) {
@@ -729,7 +729,7 @@ class ImapProtocol extends Protocol {
      * @return Response
      * @throws RuntimeException
      */
-    public function content(int|array $uids, string $rfc = "RFC822", int|string $uid = IMAP::ST_UID): Response {
+    public function content(  $uids, string $rfc = "RFC822",   $uid = IMAP::ST_UID): Response {
         return $this->fetch(["$rfc.TEXT"], $uids, null, $uid);
     }
 
@@ -743,7 +743,7 @@ class ImapProtocol extends Protocol {
      * @return Response
      * @throws RuntimeException
      */
-    public function headers(int|array $uids, string $rfc = "RFC822", int|string $uid = IMAP::ST_UID): Response {
+    public function headers(  $uids, string $rfc = "RFC822",   $uid = IMAP::ST_UID): Response {
         return $this->fetch(["$rfc.HEADER"], $uids, null, $uid);
     }
 
@@ -756,7 +756,7 @@ class ImapProtocol extends Protocol {
      * @return Response
      * @throws RuntimeException
      */
-    public function flags(int|array $uids, int|string $uid = IMAP::ST_UID): Response {
+    public function flags(  $uids,   $uid = IMAP::ST_UID): Response {
         return $this->fetch(["FLAGS"], $uids, null, $uid);
     }
 
@@ -769,7 +769,7 @@ class ImapProtocol extends Protocol {
      * @return Response
      * @throws RuntimeException
      */
-    public function sizes(int|array $uids, int|string $uid = IMAP::ST_UID): Response {
+    public function sizes(  $uids,   $uid = IMAP::ST_UID): Response {
         return $this->fetch(["RFC822.SIZE"], $uids, null, $uid);
     }
 
@@ -784,7 +784,7 @@ class ImapProtocol extends Protocol {
         if (!$this->enable_uid_cache || empty($this->uid_cache) || count($this->uid_cache) <= 0) {
             try {
                 $this->setUidCache((array)$this->fetch('UID', 1, INF)->data()); // set cache for this folder
-            } catch (RuntimeException) {
+            } catch (RuntimeException $exception) {
             }
         }
         $uids = $this->uid_cache;
@@ -874,7 +874,7 @@ class ImapProtocol extends Protocol {
      * @throws RuntimeException
      */
     public function store(
-        array|string $flags, int $from, int $to = null, string $mode = null, bool $silent = true, int|string $uid = IMAP::ST_UID, string $item = null
+         $flags, int $from, int $to = null, string $mode = null, bool $silent = true,   $uid = IMAP::ST_UID, string $item = null
     ): Response {
         $flags = $this->escapeList(is_array($flags) ? $flags : [$flags]);
         $set = $this->buildSet($from, $to);
@@ -944,7 +944,7 @@ class ImapProtocol extends Protocol {
      * @throws ImapServerErrorException
      * @throws RuntimeException
      */
-    public function copyMessage(string $folder, $from, int $to = null, int|string $uid = IMAP::ST_UID): Response {
+    public function copyMessage(string $folder, $from, int $to = null,   $uid = IMAP::ST_UID): Response {
         $set = $this->buildSet($from, $to);
         $command = $this->buildUIDCommand("COPY", $uid);
 
@@ -965,7 +965,7 @@ class ImapProtocol extends Protocol {
      * @throws ImapServerErrorException
      * @throws RuntimeException
      */
-    public function copyManyMessages(array $messages, string $folder, int|string $uid = IMAP::ST_UID): Response {
+    public function copyManyMessages(array $messages, string $folder,   $uid = IMAP::ST_UID): Response {
         $command = $this->buildUIDCommand("COPY", $uid);
 
         $set = implode(',', $messages);
@@ -990,7 +990,7 @@ class ImapProtocol extends Protocol {
      * @throws ImapServerErrorException
      * @throws RuntimeException
      */
-    public function moveMessage(string $folder, $from, int $to = null, int|string $uid = IMAP::ST_UID): Response {
+    public function moveMessage(string $folder, $from, int $to = null,   $uid = IMAP::ST_UID): Response {
         $set = $this->buildSet($from, $to);
         $command = $this->buildUIDCommand("MOVE", $uid);
 
@@ -1011,7 +1011,7 @@ class ImapProtocol extends Protocol {
      * @throws ImapServerErrorException
      * @throws RuntimeException
      */
-    public function moveManyMessages(array $messages, string $folder, int|string $uid = IMAP::ST_UID): Response {
+    public function moveManyMessages(array $messages, string $folder,   $uid = IMAP::ST_UID): Response {
         $command = $this->buildUIDCommand("MOVE", $uid);
         $set = implode(',', $messages);
         $tokens = [$set, $this->escapeString($folder)];
@@ -1215,7 +1215,7 @@ class ImapProtocol extends Protocol {
      * @throws ImapServerErrorException
      * @throws RuntimeException
      */
-    public function search(array $params, int|string $uid = IMAP::ST_UID): Response {
+    public function search(array $params,   $uid = IMAP::ST_UID): Response {
         $command = $this->buildUIDCommand("SEARCH", $uid);
         $response = $this->requestAndResponse($command, $params)->setCanBeEmpty(true);
 
@@ -1240,7 +1240,7 @@ class ImapProtocol extends Protocol {
      * @throws MessageNotFoundException
      * @throws InvalidMessageDateException
      */
-    public function overview(string $sequence, int|string $uid = IMAP::ST_UID): Response {
+    public function overview(string $sequence,   $uid = IMAP::ST_UID): Response {
         $result = [];
         list($from, $to) = explode(":", $sequence);
 
@@ -1287,7 +1287,7 @@ class ImapProtocol extends Protocol {
      *
      * @return int|string
      */
-    public function buildSet($from, $to = null): int|string {
+    public function buildSet($from, $to = null) {
         $set = (int)$from;
         if ($to !== null) {
             $set .= ':' . ($to == INF ? '*' : (int)$to);

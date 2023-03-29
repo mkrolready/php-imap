@@ -72,7 +72,7 @@ class Query {
     protected bool $fetch_flags = true;
 
     /** @var int|string $sequence */
-    protected mixed $sequence = IMAP::NIL;
+    protected  $sequence = IMAP::NIL;
 
     /** @var string $fetch_order */
     protected string $fetch_order;
@@ -123,7 +123,7 @@ class Query {
      *
      * @return string
      */
-    protected function parse_value(mixed $value): string {
+    protected function parse_value( $value): string {
         if ($value instanceof Carbon) {
             $value = $value->format($this->date_format);
         }
@@ -138,12 +138,12 @@ class Query {
      * @return Carbon
      * @throws MessageSearchValidationException
      */
-    protected function parse_date(mixed $date): Carbon {
+    protected function parse_date( $date): Carbon {
         if ($date instanceof Carbon) return $date;
 
         try {
             $date = Carbon::parse($date);
-        } catch (Exception) {
+        } catch (Exception $exception) {
             throw new MessageSearchValidationException();
         }
 
@@ -196,7 +196,9 @@ class Query {
         try {
             $available_messages = $this->client->getConnection()->search([$this->getRawQuery()], $this->sequence)->validatedData();
             return new Collection($available_messages);
-        } catch (RuntimeException|ConnectionFailedException $e) {
+        } catch (ConnectionFailedException $e) {
+            throw new GetMessagesFailedException("failed to fetch messages", 0, $e);
+        } catch (RuntimeException $e) {
             throw new GetMessagesFailedException("failed to fetch messages", 0, $e);
         }
     }
@@ -275,7 +277,13 @@ class Query {
     protected function make(int $uid, int $msglist, string $header, string $content, array $flags): ?Message {
         try {
             return Message::make($uid, $msglist, $this->getClient(), $header, $content, $flags, $this->getFetchOptions(), $this->sequence);
-        } catch (RuntimeException|MessageFlagException|InvalidMessageDateException|MessageContentFetchingException $e) {
+        } catch (MessageContentFetchingException $e) {
+            $this->setError($uid, $e);
+        } catch (InvalidMessageDateException $e) {
+            $this->setError($uid, $e);
+        } catch (MessageFlagException $e) {
+            $this->setError($uid, $e);
+        } catch (RuntimeException $e) {
             $this->setError($uid, $e);
         }
 
@@ -293,12 +301,20 @@ class Query {
      * @return string
      */
     protected function getMessageKey(string $message_key, int $msglist, Message $message): string {
-        $key = match ($message_key) {
-            'number' => $message->getMessageNo(),
-            'list' => $msglist,
-            'uid' => $message->getUid(),
-            default => $message->getMessageId(),
-        };
+        switch ($message_key) {
+            case 'number':
+                $key = $message->getMessageNo();
+                break;
+            case 'list':
+                $key = $msglist;
+                break;
+            case 'uid':
+                $key = $message->getUid();
+                break;
+            default:
+                $key = $message->getMessageId();
+                break;
+        }
         return (string)$key;
     }
 
@@ -674,7 +690,7 @@ class Query {
      *
      * @return int|string
      */
-    public function getSequence(): int|string {
+    public function getSequence() {
         return $this->sequence;
     }
 

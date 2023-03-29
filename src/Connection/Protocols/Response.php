@@ -44,7 +44,7 @@ class Response {
      * Result to be returned
      * @var mixed|null $result
      */
-    protected mixed $result = null;
+    protected  $result = null;
 
     /**
      * Noun to identify the request / response
@@ -192,7 +192,7 @@ class Response {
      *
      * @return Response
      */
-    public function addResponse(mixed $response): Response {
+    public function addResponse( $response): Response {
         $this->response[] = $response;
         return $this;
     }
@@ -223,7 +223,7 @@ class Response {
      *
      * @return Response
      */
-    public function setResult(mixed $result): Response  {
+    public function setResult( $result): Response  {
         $this->result = $result;
         return $this;
     }
@@ -244,7 +244,7 @@ class Response {
      *
      * @return mixed
      */
-    public function data(): mixed {
+    public function data() {
         if ($this->result !== null) {
             return $this->result;
         }
@@ -304,7 +304,7 @@ class Response {
      *
      * @throws ResponseException
      */
-    public function validatedData(): mixed {
+    public function validatedData() {
         return $this->validate()->data();
     }
 
@@ -346,7 +346,7 @@ class Response {
      *
      * @return bool
      */
-    public function verify_data(mixed $data): bool {
+    public function verify_data( $data): bool {
         if (is_array($data)) {
             foreach ($data as $line) {
                 if (is_array($line)) {

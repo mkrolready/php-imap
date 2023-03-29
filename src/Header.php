@@ -129,7 +129,7 @@ class Header {
      *
      * @return Attribute|array
      */
-    public function set(string $name, mixed $value, bool $strict = false): Attribute|array {
+    public function set(string $name,  $value, bool $strict = false) {
         if (isset($this->attributes[$name]) && $strict === false) {
             $this->attributes[$name]->add($value, true);
         } else {
@@ -145,7 +145,7 @@ class Header {
      *
      * @return mixed|null
      */
-    public function find($pattern): mixed {
+    public function find($pattern) {
         if (preg_match_all($pattern, $this->raw, $matches)) {
             if (isset($matches[1])) {
                 if (count($matches[1]) > 0) {
@@ -363,7 +363,7 @@ class Header {
      *
      * @return mixed|string
      */
-    public function convertEncoding($str, string $from = "ISO-8859-2", string $to = "UTF-8"): mixed {
+    public function convertEncoding($str, string $from = "ISO-8859-2", string $to = "UTF-8") {
         $from = EncodingAliases::get($from, $this->fallback_encoding);
         $to = EncodingAliases::get($to, $this->fallback_encoding);
 
@@ -380,7 +380,7 @@ class Header {
      *
      * @return string
      */
-    public function getEncoding(object|string $structure): string {
+    public function getEncoding($structure): string {
         if (property_exists($structure, 'parameters')) {
             foreach ($structure->parameters as $parameter) {
                 if (strtolower($parameter->attribute) == "charset") {
@@ -413,7 +413,7 @@ class Header {
      *
      * @return mixed
      */
-    public function decode(mixed $value): mixed {
+    public function decode( $value) {
         if (is_array($value)) {
             return $this->decodeArray($value);
         }
@@ -467,14 +467,26 @@ class Header {
     private function findPriority(): void {
         $priority = $this->get("x_priority");
 
-        $priority = match ((int)"$priority") {
-            IMAP::MESSAGE_PRIORITY_HIGHEST => IMAP::MESSAGE_PRIORITY_HIGHEST,
-            IMAP::MESSAGE_PRIORITY_HIGH => IMAP::MESSAGE_PRIORITY_HIGH,
-            IMAP::MESSAGE_PRIORITY_NORMAL => IMAP::MESSAGE_PRIORITY_NORMAL,
-            IMAP::MESSAGE_PRIORITY_LOW => IMAP::MESSAGE_PRIORITY_LOW,
-            IMAP::MESSAGE_PRIORITY_LOWEST => IMAP::MESSAGE_PRIORITY_LOWEST,
-            default => IMAP::MESSAGE_PRIORITY_UNKNOWN,
-        };
+        switch ((int)"$priority") {
+            case IMAP::MESSAGE_PRIORITY_HIGHEST:
+                $priority = IMAP::MESSAGE_PRIORITY_HIGHEST;
+                break;
+            case IMAP::MESSAGE_PRIORITY_HIGH:
+                $priority = IMAP::MESSAGE_PRIORITY_HIGH;
+                break;
+            case IMAP::MESSAGE_PRIORITY_NORMAL:
+                $priority = IMAP::MESSAGE_PRIORITY_NORMAL;
+                break;
+            case IMAP::MESSAGE_PRIORITY_LOW:
+                $priority = IMAP::MESSAGE_PRIORITY_LOW;
+                break;
+            case IMAP::MESSAGE_PRIORITY_LOWEST:
+                $priority = IMAP::MESSAGE_PRIORITY_LOWEST;
+                break;
+            default:
+                $priority = IMAP::MESSAGE_PRIORITY_UNKNOWN;
+                break;
+        }
 
         $this->set("priority", $priority);
     }
