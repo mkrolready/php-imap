@@ -485,7 +485,7 @@ class ImapProtocol extends Protocol {
      * @return Response
      */
     public function logout(): Response {
-        if (!$this->stream) {
+        if (!$this->stream || feof($this->stream)) {
             $this->reset();
             return new Response(0, $this->debug);
         }elseif ($this->meta()["timed_out"]) {
